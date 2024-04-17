@@ -42,11 +42,38 @@ class Sudoku:
             else:
                 print()
 
-    def start_solve(self) -> None:
-        pass
+    def is_valid_move(self, row, col, val) -> bool:
+        # Check for value in given row
+        if val in self.board[row]:
+            return False
+        # Check for value in given column
+        elif val in [self.board[i][col] for i in range(GRID_SIZE)]:
+            return False
+        #Check for value in current sub-grid
+        else:
+            # Get top right coords of sub-grid using integer division
+            start_row = (row // SUB_GRID_SIZE) * SUB_GRID_SIZE
+            start_col = (col // SUB_GRID_SIZE) * SUB_GRID_SIZE
+
+            for i in range(start_row, start_row + SUB_GRID_SIZE):
+                for j in range(start_col, start_col + SUB_GRID_SIZE):
+                    print(self.board[i][j])
+                    # Return False if val is in sub-grid
+                    if val == self.board[i][j]:
+                        return False
+            # Otherwise, return True
+            return True
+        
+    def _solve(self, row, col, val) -> bool:
+        return False
+    
+    def start_solve(self) -> bool:
+        return False
 
 
 game = Sudoku()
 game.load_board("board.txt")
 #game.fill_board()
+if game.is_valid_move(5, 5, 7): print("Good!") 
+else: print("No good!")
 game.print_board()
