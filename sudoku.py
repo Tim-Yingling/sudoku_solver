@@ -57,18 +57,61 @@ class Sudoku:
 
             for i in range(start_row, start_row + SUB_GRID_SIZE):
                 for j in range(start_col, start_col + SUB_GRID_SIZE):
-                    print(self.board[i][j])
                     # Return False if val is in sub-grid
                     if val == self.board[i][j]:
                         return False
             # Otherwise, return True
             return True
         
-    def _solve(self, row, col, val) -> bool:
+    def _solve(self, row, col) -> bool:
+        # If we have reached past the last cell, then we've solved the board and can return True
+        if (row == GRID_SIZE - 1 and col == GRID_SIZE):
+            return True
+        
+        # If we reach over column limit, then reset and increment rows
+        if col == GRID_SIZE:
+            row += 1
+            col = 0
+
+        # If cell is already occupied by a number, then go to next cell
+        if self.board[row][col] != 0:
+            return self._solve(row, col + 1)
+        
+        # Try all possible values for given cell
+        for x in range(1, 10): #for x in range(1, 9):
+            # Check to see if x is a valid move
+            if self.is_valid_move(row, col, x):
+                # If x is valid, assume it belongs in the cell and update the board
+                self.board[row][col] = x
+
+                # Now we see if we can continue to solve the board. If we can, return True
+                if self._solve(row, col + 1):
+                    return True
+                
+                # If we cannot solve, our assumption is wrong and we must reset the cell
+                self.board[row][col] = 0
+
         return False
-    
+
+
     def start_solve(self) -> bool:
-        return False
+        # Find first cell that is able to be changed
+
+        if self._solve(0, 0):
+            return True
+        else:
+            return False
+        '''
+        row = 0
+        col = 0
+        while self.board[row][col] != 0:
+            col += 1
+            if col >= GRID_SIZE:
+                col = 0
+                row += 1
+        print("GOING INTO SOLVE:", row, col)
+        return self._solve(row, col)
+        '''
 
 
 game = Sudoku()
@@ -76,4 +119,7 @@ game.load_board("board.txt")
 #game.fill_board()
 if game.is_valid_move(5, 5, 7): print("Good!") 
 else: print("No good!")
+game.print_board()
+status = game.start_solve()
+print(status)
 game.print_board()
