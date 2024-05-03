@@ -8,12 +8,20 @@ class Sudoku:
         self.board = []
 
     def load_board(self, filename: str) -> None:
+        """
+        Fills board with a given text file where cells are separated by commas and rows by lines
+        
+        :param filename: relative file path to the board
+        """
+
         with open(filename, 'r') as file:
             for line in file:
                 row = [int(cell) for cell in line.strip().split(',')]
                 self.board.append(row)
 
     def fill_board(self) -> None:
+        """Continuously asks the user to input board, cell by cell"""
+
         for i in range(GRID_SIZE):
             row = []
             for j in range(GRID_SIZE):
@@ -22,9 +30,8 @@ class Sudoku:
             self.board.append(row)
 
     def print_board(self) -> None:
-        """
-        Prints the current state of the Sudoku board to the console.
-        """
+        """Prints the current state of the board to the console"""
+
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
                 # Print a vertical separator if we're at the start of a new sub-grid
@@ -43,6 +50,15 @@ class Sudoku:
                 print()
 
     def is_valid_move(self, row, col, val) -> bool:
+        """
+        Checks if a move is valid given the current state of the board
+
+        :param row: row index to try
+        :param col: column index to try
+        :param val: value to be placed
+        :return: True if move is valid, otherwise False
+        """
+
         # Check for value in given row
         if val in self.board[row]:
             return False
@@ -64,6 +80,14 @@ class Sudoku:
             return True
         
     def _solve(self, row, col) -> bool:
+        """
+        Recursive function to solve the board
+
+        :param row: row index to try a move
+        :param col: column index to try a move
+        :return: True if the rest of the board can be solved, otherwise False
+        """
+
         # If we have reached past the last cell, then we've solved the board and can return True
         if (row == GRID_SIZE - 1 and col == GRID_SIZE):
             return True
@@ -78,7 +102,7 @@ class Sudoku:
             return self._solve(row, col + 1)
         
         # Try all possible values for given cell
-        for x in range(1, 10): #for x in range(1, 9):
+        for x in range(1, 10): 
             # Check to see if x is a valid move
             if self.is_valid_move(row, col, x):
                 # If x is valid, assume it belongs in the cell and update the board
@@ -95,31 +119,25 @@ class Sudoku:
 
 
     def start_solve(self) -> bool:
-        # Find first cell that is able to be changed
+        """
+        Solve driver function
+
+        :return: True if board is solved, otherwise False
+        """
 
         if self._solve(0, 0):
             return True
         else:
             return False
-        '''
-        row = 0
-        col = 0
-        while self.board[row][col] != 0:
-            col += 1
-            if col >= GRID_SIZE:
-                col = 0
-                row += 1
-        print("GOING INTO SOLVE:", row, col)
-        return self._solve(row, col)
-        '''
 
 
-game = Sudoku()
-game.load_board("board.txt")
-#game.fill_board()
-if game.is_valid_move(5, 5, 7): print("Good!") 
-else: print("No good!")
-game.print_board()
-status = game.start_solve()
-print(status)
-game.print_board()
+if __name__ == '__main__':
+    game = Sudoku()
+    game.load_board("board.txt")
+    #game.fill_board()
+    if game.is_valid_move(5, 5, 7): print("Good!") 
+    else: print("No good!")
+    game.print_board()
+    status = game.start_solve()
+    print(status)
+    game.print_board()
