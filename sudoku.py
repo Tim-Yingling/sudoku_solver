@@ -4,8 +4,8 @@ SUB_GRID_SIZE = 3
 
 
 class Sudoku:
-    def __init__(self) -> None:
-        self.board = []
+    def __init__(self, board=[]) -> None:
+        self.board = board
 
     def load_board(self, filename: str) -> None:
         """
