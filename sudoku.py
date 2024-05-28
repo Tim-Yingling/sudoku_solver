@@ -4,8 +4,9 @@ SUB_GRID_SIZE = 3
 
 
 class Sudoku:
-    def __init__(self, board=[]) -> None:
+    def __init__(self, board=[], callback=None) -> None:
         self.board = board
+        self.callback = callback
 
     def load_board(self, filename: str) -> None:
         """
@@ -107,6 +108,8 @@ class Sudoku:
             if self.is_valid_move(row, col, x):
                 # If x is valid, assume it belongs in the cell and update the board
                 self.board[row][col] = x
+                if self.callback:
+                    self.callback(row, col, x)
 
                 # Now we see if we can continue to solve the board. If we can, return True
                 if self._solve(row, col + 1):
@@ -114,6 +117,8 @@ class Sudoku:
                 
                 # If we cannot solve, our assumption is wrong and we must reset the cell
                 self.board[row][col] = 0
+                if self.callback:
+                    self.callback(row, col, 0)
 
         return False
 

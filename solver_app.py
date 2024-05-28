@@ -12,7 +12,7 @@ def load_board():
             else:
                 row.append(int(data))
         game_board.append(row)
-    return Sudoku(game_board)
+    return Sudoku(board=game_board, callback=update_grid)
 
 
 def solve_sudoku():
@@ -22,6 +22,12 @@ def solve_sudoku():
         game.print_board()
     else:
         print('No solution to the board.')
+
+
+def update_grid(row, col, val):
+    entries[row][col].delete(0, END)
+    entries[row][col].insert(0, val)
+    entries[row][col].config(fg='green')
 
 
 if __name__ == '__main__':
