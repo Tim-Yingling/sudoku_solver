@@ -1,7 +1,15 @@
 from sudoku import Sudoku
 from tkinter import *
+import time
 
 def load_board():
+    """
+    Loads the Sudoku board from the GUI entries.
+
+    :return: A Sudoku object with the loaded board
+    """
+
+    # Create a list to hold the game board data
     game_board = []
     for entry in entries:
         row = []
@@ -16,6 +24,12 @@ def load_board():
 
 
 def solve_sudoku():
+    """
+    Solves the Sudoku board and updates the GUI.
+
+    :return: None
+    """
+
     game = load_board()
     valid = game.start_solve()
     if valid:
@@ -25,14 +39,31 @@ def solve_sudoku():
 
 
 def update_grid(row, col, val):
+    """
+    Updates the GUI with the solved Sudoku board.
+
+    :param row: The row index to update
+    :param col: The column index to update
+    :param val: The value to update the cell with
+    :return: None
+    """
+
     entries[row][col].delete(0, END)
     entries[row][col].insert(0, val)
-    entries[row][col].config(fg='green')
+
+    # Add different color for 0 since it won't be part of the solution
+    fg_color = 'blue' if val != 0 else 'darkred'
+
+    entries[row][col].config(fg=fg_color)
+    time.sleep(0.005)
+    root.update_idletasks()
 
 
 if __name__ == '__main__':
+    # Create the main window
     root = Tk()
     root.title('Sudoku Solver')
+    root.config(bg='darkgrey')
 
     # Set up entry boxes for sudoku board
     entries = []
@@ -50,7 +81,9 @@ if __name__ == '__main__':
 
         entries.append(row)
 
-    solve_button = Button(root, text="Solve", command=solve_sudoku)
+    # Create the solve button
+    solve_button = Button(root, text="Solve", font=('Arial', 14), command=solve_sudoku)
     solve_button.grid(row=9, column=0, columnspan=9)
 
+    # Start the main event loop
     root.mainloop()

@@ -5,6 +5,14 @@ SUB_GRID_SIZE = 3
 
 class Sudoku:
     def __init__(self, board=[], callback=None) -> None:
+        """
+        A class to represent a Sudoku game.
+
+        :param board: A 2D list to hold the game state
+        :param callback: An optional function to be called when a cell is updated
+        :return: None
+        """
+
         self.board = board
         self.callback = callback
 
@@ -13,6 +21,7 @@ class Sudoku:
         Fills board with a given text file where cells are separated by commas and rows by lines
         
         :param filename: relative file path to the board
+        :return: None
         """
 
         with open(filename, 'r') as file:
@@ -21,7 +30,11 @@ class Sudoku:
                 self.board.append(row)
 
     def fill_board(self) -> None:
-        """Continuously asks the user to input board, cell by cell"""
+        """
+        Continuously asks the user to input board, cell by cell
+        
+        :return: None
+        """
 
         for i in range(GRID_SIZE):
             row = []
@@ -31,7 +44,11 @@ class Sudoku:
             self.board.append(row)
 
     def print_board(self) -> None:
-        """Prints the current state of the board to the console"""
+        """
+        Prints the current state of the board to the console
+        
+        :return: None
+        """
 
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
@@ -68,7 +85,7 @@ class Sudoku:
             return False
         #Check for value in current sub-grid
         else:
-            # Get top right coords of sub-grid using integer division
+            # Get top left coords of sub-grid using integer division
             start_row = (row // SUB_GRID_SIZE) * SUB_GRID_SIZE
             start_col = (col // SUB_GRID_SIZE) * SUB_GRID_SIZE
 
@@ -123,26 +140,19 @@ class Sudoku:
         return False
 
 
-    def start_solve(self) -> bool:
+    def start_solve(self):
         """
         Solve driver function
 
         :return: True if board is solved, otherwise False
         """
 
-        if self._solve(0, 0):
-            return True
-        else:
-            return False
-
+         # The _solve method is called with the arguments (0, 0) to start solving the board from the first cell
+        return self._solve(0, 0)
 
 if __name__ == '__main__':
     game = Sudoku()
     game.load_board("board.txt")
-    #game.fill_board()
-    if game.is_valid_move(5, 5, 7): print("Good!") 
-    else: print("No good!")
-    game.print_board()
     status = game.start_solve()
     print(status)
     game.print_board()
